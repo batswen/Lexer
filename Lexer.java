@@ -82,7 +82,7 @@ public class Lexer {
     }
     Token char_lit(int line, int pos) {
         char c = getNextChar(); // skip opening quote
-        int n = 0;
+        int n = (int)c;
         if (c == '\'') {
             error(line, pos, "empty character constant");
         } else if (c == '\\') {
@@ -137,7 +137,7 @@ public class Lexer {
         boolean is_number = true;
         String text = "";
         
-        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr)) {
+        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr) || this.chr == '_') {
             text += this.chr;
             if (!Character.isDigit(this.chr)) {
                 is_number = false;
