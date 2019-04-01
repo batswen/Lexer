@@ -12,7 +12,7 @@ public class Lexer {
     private char chr;
     private String s;
     
-    HashMap<String, TokenType> keywords = new HashMap<>();
+    Map<String, TokenType> keywords = new HashMap<>();
     
     static class Token {
         public TokenType tokentype;
