@@ -176,7 +176,7 @@ public class Lexer {
             case '<': return follow('=', TokenType.Op_lessequal, TokenType.Op_less, line, pos);
             case '>': return follow('=', TokenType.Op_greaterequal, TokenType.Op_greater, line, pos);
             case '=': return follow('=', TokenType.Op_equal, TokenType.Op_assign, line, pos);
-            case '!': return follow('=', TokenType.Op_not, TokenType.Op_notequal, line, pos);
+            case '!': return follow('=', TokenType.Op_notequal, TokenType.Op_not, line, pos);
             case '&': return follow('&', TokenType.Op_and, TokenType.End_of_input, line, pos);
             case '|': return follow('|', TokenType.Op_or, TokenType.End_of_input, line, pos);
             case '"': return string_lit(this.chr, line, pos);
