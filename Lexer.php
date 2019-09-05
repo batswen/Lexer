@@ -19,10 +19,10 @@ class Lexer {
 	];
     public function __construct($source) {
         $this->source = $source;
-        $this->cpos = 0;        // position in line
+        $this->cpos = 1;        // position in line
         $this->cposition = 0;   // position in source
         $this->line = 1;
-        $this->char = ' ';
+        $this->char = substr($this->source, 0, 1);
         $this->keywords = [
             'if' => Lexer::TokenType['Keyword_if'],
             'else' => Lexer::TokenType['Keyword_else'],
@@ -85,10 +85,10 @@ class Lexer {
     }
     private function char_lit($line, $cpos) {
         $c = $this->getNextChar(); // skip opening quote
-        $n = $c.charCodeAt(0);
+        $n = mb_ord($c);
         if ($c === "\'") {
             $this->error(line, $cpos, 'empty character constant');
-        } else if ($c === "\\") {
+        } else if ($c === '\\') {
             $c = $this->getNextChar();
             if ($c == 'n') {
                 $n = 10;
@@ -98,7 +98,7 @@ class Lexer {
                 $this->error($line, $cpos, 'unknown escape sequence \\' . c);
             }
         }
-        if ($this->getNextChar() !== "\'") {
+        if ($this->getNextChar() !== '\'') {
             $this->error($line, $cpos, 'multi-character constant');
         }
         $this->getNextChar();
@@ -130,7 +130,7 @@ class Lexer {
             $this->getNextChar();
         }
         if ($text === '') {
-            $this->error($line, $cpos, 'identifer_or_integer: unrecopgnized character: (' . substr($this->char, 0, 1) . ') "' . $this->char . '"');
+            $this->error($line, $cpos, 'identifer_or_integer: unrecopgnized character: (' . mb_ord($this->char) . ') "' . $this->char . '"');
         }
  
         if (preg_match('/\d/', substr($text, 0, 1))) {
@@ -152,7 +152,7 @@ class Lexer {
         switch ($this->char) {
             case Lexer::Undefined: return [ 'type' => Lexer::TokenType['End_of_input'], 'value' => '', 'line' => $this->line, 'cpos' => $this->cpos ];
             case '/':       return $this->div_or_comment($line, $cpos);
-            case "\'":      return $this->char_lit($line, $cpos);
+            case '\'':      return $this->char_lit($line, $cpos);
             case "\"":      return $this->String_lit($this->char, $line, $cpos);
 
             case '<':       return $this->follow('=', Lexer::TokenType['Op_lessequal'], Lexer::TokenType['Op_less'], $line, $cpos);
@@ -180,8 +180,8 @@ class Lexer {
         return array_search($value, Lexer::TokenType);
     }
     private function printToken($t) {
-        $result = substr('     ' . $t['line'], 0, 16);
-        $result .= substr('       ' . $t['cpos'], 0, 16);
+        $result = substr('     ' . $t['line'], strlen(strval($t['line'])));
+        $result .= substr('       ' . $t['cpos'], strlen(strval($t['cpos'])));
         $result .= substr(' ' . $this->getTokenType($t['type']) . '           ', 0, 16);
         switch ($t['type']) {
             case Lexer::TokenType['Integer']:
@@ -191,7 +191,7 @@ class Lexer {
                 $result .= ' ' . $t['value'];
                 break;
             case Lexer::TokenType['String']:
-                $result .= ' \''. $t['value'] . '\'';
+                $result .= " \"". $t['value'] . "\"";
                 break;
         }
         echo $result."\n";
@@ -206,5 +206,5 @@ class Lexer {
 }
 
 $file = file_get_contents($argv[1]);
-$l = new Lexer(' ' . $file);
+$l = new Lexer($file);
 $l->printTokens();
