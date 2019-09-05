@@ -17,7 +17,7 @@ const TokenType = {
 class Lexer {
     constructor(source) {
         this.source = source
-        this.pos = 0        // position in line
+        this.pos = 1        // position in line
         this.position = 0   // position in source
         this.line = 1
         this.chr = this.source.charAt(0)
