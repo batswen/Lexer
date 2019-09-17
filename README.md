@@ -1,5 +1,7 @@
 # Lexer
 Lexer for Rosetta code (https://rosettacode.org/wiki/Compiler/lexical_analyzer)
+##
+The java version is a translation of the python source from Rosetta code, the JavaScript and PHP version are translated from Java
 
 # Usage
 ### Java
