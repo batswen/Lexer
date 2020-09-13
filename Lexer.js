@@ -32,7 +32,7 @@ class Lexer {
     getNextChar() {
         this.pos++
         this.position++
-        
+
         if (this.position >= this.source.length) {
             this.chr = undefined
             return this.chr
@@ -67,7 +67,7 @@ class Lexer {
             return { type: TokenType.Op_divide, value: "/", line, pos }
         }
         this.getNextChar()
-        while (true) { 
+        while (true) {
             if (this.chr === '\u0000') {
                 this.error(line, pos, "EOF in comment")
             } else if (this.chr === '*') {
@@ -118,7 +118,7 @@ class Lexer {
     identifier_or_integer(line, pos) {
         let is_number = true
         let text = ""
- 
+
         while (/\w/.test(this.chr) || this.chr === '_') {
             text += this.chr
             if (!/\d/.test(this.chr)) {
@@ -129,14 +129,14 @@ class Lexer {
         if (text === "") {
             this.error(line, pos, "identifer_or_integer unrecopgnized character: follow: unrecognized character: (" + this.chr.charCodeAt(0) + ") '" + this.chr + "'")
         }
- 
+
         if (/\d/.test(text.charAt(0))) {
             if (!is_number) {
                 this.error(line, pos, "invaslid number: " + text)
             }
             return { type: TokenType.Integer, value: text, line, pos }
         }
- 
+
         if (text in this.keywords) {
             return { type: this.keywords[text], value: "", line, pos }
         }
@@ -181,11 +181,9 @@ class Lexer {
         return Object.keys(TokenType).find(key => TokenType[key] === value)
     }
     printToken(t) {
-        //console.log(t.line+" "+t.pos+" "+this.getTokenType(t.type)+" "+t.value)
         let result = ("     " + t.line).substr(t.line.toString().length)
         result += ("       " + t.pos).substr(t.pos.toString().length)
         result += (" " + this.getTokenType(t.type) + "           ").substr(0, 16)
-        //"%5d  %5d %-15s", this.line, this.pos, this.tokentype);
         switch (t.type) {
             case TokenType.Integer:
                 result += "  " + t.value
